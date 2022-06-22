@@ -32,9 +32,9 @@ class Seq2SeqTrainer:
 
         acc_iter = 1
 
-        for i, (src, trg) in tqdm.tqdm(enumerate(loader)):
+        self.scheduler.optimzier.zero_grad()
 
-            self.scheduler.optimizer.zero_grad()
+        for i, (src, trg) in tqdm.tqdm(enumerate(loader)):
 
             src, trg = src.to(self.device), trg.to(self.device)
 
@@ -45,6 +45,7 @@ class Seq2SeqTrainer:
             
             if acc_iter == self.acc_steps:
                 self.scheduler.optimizer.step()
+                self.scheduler.optimizer.zero_grad()
                 acc_iter = 0
             
             acc_iter += 1
@@ -112,11 +113,11 @@ class FFTrainer:
         self.trg_encoder.eval()
         self.ff.train()
 
+        self.opt.zero_grad()
+
         acc_iter = 1
 
         for i, (src, trg) in enumerate(loader):
-
-            self.opt.zero_grad()
 
             src, trg = src.to(self.device), trg.to(self.device)
 
@@ -137,6 +138,7 @@ class FFTrainer:
             
             if acc_iter == self.acc_steps:
                 self.opt.step()
+                self.opt.zero_grad()
                 acc_iter = 0
             
             acc_iter += 1
