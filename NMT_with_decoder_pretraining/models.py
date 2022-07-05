@@ -51,7 +51,6 @@ class Seq2Seq(pl.LightningModule):
 
         return loss
 
-    
     def training_step(self, batch, batch_idx):
 
         return self._run_step(batch, batch_idx)
